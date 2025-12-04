@@ -1,2 +1,2 @@
-web: php -S 0.0.0.0:${PORT:-8080} -t public
+web: vendor/bin/heroku-php-apache2 public/
 release: php artisan migrate --force

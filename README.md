@@ -1,44 +1,106 @@
-# Backend Laravel
+# Backend - Proyecto Buenaventura
 
-Este directorio contiene un esqueleto autocommentado de Laravel optimizado para actuar como *backend BFF* entre la app Ionic y la API externa de recolección. Todos los archivos incluyen comentarios detallados para facilitar el estudio del flujo interno.
+API REST Laravel 11 para el sistema de recolección de basura en Buenaventura.
 
-## Requisitos
+## 🚀 Despliegue en Railway - PASO A PASO
 
-- PHP 8.3+
-- Composer 2.7+
-- Extensiones: `pdo_mysql`, `curl`, `mbstring`, `openssl`
-- Base de datos MySQL (por defecto) o PostgreSQL
+### PASO 1: Verificar archivos (YA COMPLETADO ✅)
+- ✅ `Procfile` - Configuración de ejecución
+- ✅ `runtime.txt` - Versión de PHP 8.2.14
+- ✅ `composer.json` - Dependencias
+- ✅ `.env.example` - Variables de ejemplo
 
-## Puesta en marcha
+### PASO 2: En Railway Dashboard
 
-1. Instala dependencias de Composer en esta carpeta:
-	```bash
-	cd backend-laravel
-	composer install
-	```
-2. Copia variables de entorno y ajusta credenciales/API keys:
-	```bash
-	cp .env.example .env
-	php artisan key:generate
-	```
-3. Configura la base de datos en `.env` y ejecuta migraciones:
-	```bash
-	php artisan migrate
-	```
-4. Opcional: ejecuta el servidor embebido
-	```bash
-	php artisan serve --host=0.0.0.0 --port=8000
-	```
+**2.1 Conectar repositorio:**
+1. Ve a https://railway.app
+2. Nuevo proyecto → Deploy from GitHub
+3. Selecciona: `junior1318/backend-buenaventura`
 
-## Estructura destacada
+**2.2 Agregar MySQL:**
+1. En el proyecto → Create
+2. Selecciona MySQL
+3. Espera a que se configure
 
-- `app/Services/ExternalApiService.php` centraliza el consumo de la API externa con manejo de errores.
-- `app/Services/TrackingQueueService.php` almacena posiciones fallidas y las reintenta (trigger manual o con `artisan tracking:flush`).
-- `app/Http/Controllers/*` exponen endpoints REST protegidos con Sanctum.
-- `database/migrations/*` generan tablas para usuarios, tokens, trabajos en cola y la *queue* local de posiciones.
-- `config/external-api.php` parametriza base URL, timeout y `GLOBAL_PERFIL_ID` de respaldo para modo ciudadano.
+**2.3 Configurar Variables de Entorno:**
+1. En el proyecto → Variables
+2. Copia y pega EXACTAMENTE esto:
 
-Consulta los comentarios de cada archivo para entender paso a paso las responsabilidades.
+```
+APP_NAME=Proyecto Buenaventura
+APP_ENV=production
+APP_DEBUG=false
+APP_KEY=base64:OGY3NDI5ZjctZWQyYS00ZDJmLWFkZDMtMjM1MjUxMjc1ZDhhODk5MDMxOWYtY2U1MS00NTg5LWJiYzEtN2IyOTE4OWEzMGUz
+LOG_CHANNEL=stack
+LOG_LEVEL=debug
+CACHE_DRIVER=database
+QUEUE_CONNECTION=database
+SESSION_DRIVER=database
+SESSION_LIFETIME=120
+EXTERNAL_API_BASE_URL=http://apirecoleccion.gonzaloandreslucio.com/api
+EXTERNAL_API_TIMEOUT=10
+GLOBAL_PERFIL_ID=
+DB_CONNECTION=mysql
+DB_HOST=${{ Mysql.MYSQL_HOST }}
+DB_PORT=3306
+DB_DATABASE=${{ Mysql.MYSQL_DATABASE }}
+DB_USERNAME=${{ Mysql.MYSQL_USER }}
+DB_PASSWORD=${{ Mysql.MYSQL_PASSWORD }}
+APP_URL=https://tu-dominio.up.railway.app
+```
+
+⚠️ IMPORTANTE:
+- NO cambies las variables `${{ }}` - Railway las completa automáticamente
+- Reemplaza `tu-dominio` con tu dominio real de Railway
+
+**2.4 Redeploy:**
+1. Click en **Redeploy** (arriba a la derecha)
+2. Espera a que termine
+3. Verifica en **Logs** que no haya errores
+
+### PASO 3: Verificar que funciona
+
+```bash
+curl https://tu-dominio.up.railway.app
+```
+
+## 📁 Estructura del Proyecto
+
+```
+app/              - Código de la aplicación
+config/           - Configuración
+database/         - Migraciones y seeders
+public/           - Punto de entrada (index.php)
+routes/           - Rutas API
+storage/          - Caché y logs
+tests/            - Tests unitarios
+```
+
+## 🔧 Desarrollo local
+
+```bash
+# Instalar dependencias
+composer install
+
+# Copiar .env
+cp .env.example .env
+
+# Generar APP_KEY
+php artisan key:generate
+
+# Ejecutar migraciones
+php artisan migrate
+
+# Iniciar servidor
+php artisan serve
+```
+
+## 📝 Requisitos
+
+- PHP: 8.2+
+- MySQL: 5.7+
+- Composer: 2.0+
+- Laravel: 11.0
 
 ```
 DB_DATABASE=laravel_db
